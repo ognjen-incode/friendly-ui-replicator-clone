@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import ApprovalHeader from "./ApprovalHeader";
 import ApprovalContent from "./ApprovalContent";
@@ -39,7 +40,7 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({
   };
 
   return (
-    <div className="border border-[color:var(--Background-Light-Gray,#E9E9EB)] max-w-[676px] overflow-hidden bg-white rounded-lg border-solid">
+    <div className="border border-[color:var(--Background-Light-Gray,#E9E9EB)] max-w-[800px] w-full overflow-hidden bg-white rounded-lg border-solid">
       <ApprovalHeader />
       <ApprovalContent
         title={title}
