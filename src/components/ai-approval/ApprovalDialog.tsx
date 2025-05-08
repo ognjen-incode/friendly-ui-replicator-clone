@@ -1,5 +1,5 @@
-
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ApprovalHeader from "./ApprovalHeader";
 import ApprovalContent from "./ApprovalContent";
 import ApprovalFooter from "./ApprovalFooter";
@@ -20,13 +20,14 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({
   timeLimit = "15 min",
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const navigate = useNavigate();
 
   const handleApprove = () => {
     setIsProcessing(true);
     // Simulate API call
     setTimeout(() => {
-      toast.success("Access approved for 15 minutes");
       setIsProcessing(false);
+      navigate('/access-granted');
     }, 1000);
   };
 
