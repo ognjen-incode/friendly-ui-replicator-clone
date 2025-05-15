@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ApprovalHeader from "./ApprovalHeader";
 import ApprovalContent from "./ApprovalContent";
 import ApprovalFooter from "./ApprovalFooter";
 import ApprovalButtons from "./ApprovalButtons";
 import { toast } from "sonner";
+import { Loader2, XCircle } from "lucide-react";
 
 interface ApprovalDialogProps {
   title?: string;
@@ -21,10 +22,13 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const token = searchParams.get("token");
+  const error = searchParams.get("error");
 
   const handleApprove = () => {
     setIsProcessing(true);
-    // Simulate API call
     setTimeout(() => {
       setIsProcessing(false);
       navigate('/access-granted');
@@ -33,24 +37,47 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({
 
   const handleDeny = () => {
     setIsProcessing(true);
-    // Simulate API call
     setTimeout(() => {
       toast.info("Access request denied");
       setIsProcessing(false);
     }, 1000);
   };
 
+  const renderContent = () => {
+    if (token) {
+      return (
+        <>
+          <ApprovalContent
+            title={title}
+            description={description}
+            actionText={actionText}
+            timeLimit={timeLimit}
+          />
+          <ApprovalButtons onApprove={handleApprove} onDeny={handleDeny} />
+          <ApprovalFooter />
+        </>
+      );
+    }
+    if (error) {
+      return (
+        <div className="flex flex-col items-center justify-center text-center py-10 px-6 min-h-[300px]">
+          <XCircle className="w-16 h-16 text-red-500 mb-4" />
+          <p className="text-xl font-medium text-slate-700">Verification failed.</p>
+        </div>
+      );
+    }
+    return (
+      <div className="flex flex-col items-center justify-center text-center py-10 px-6 min-h-[300px]">
+        <Loader2 className="w-16 h-16 text-blue-500 animate-spin mb-4" />
+        <p className="text-xl font-medium text-slate-700">Waiting for verification...</p>
+      </div>
+    );
+  };
+
   return (
     <div className="border border-[color:var(--Background-Light-Gray,#E9E9EB)] max-w-[800px] w-full overflow-hidden bg-white rounded-lg border-solid">
       <ApprovalHeader />
-      <ApprovalContent
-        title={title}
-        description={description}
-        actionText={actionText}
-        timeLimit={timeLimit}
-      />
-      <ApprovalButtons onApprove={handleApprove} onDeny={handleDeny} />
-      <ApprovalFooter />
+      {renderContent()}
     </div>
   );
 };
